@@ -1,0 +1,212 @@
+"use client";
+
+import { useState } from "react";
+
+interface SlotInput {
+  startTime: string;
+  endTime: string;
+}
+
+export default function TerrainForm() {
+  // States du terrain
+  const [name, setName] = useState("");
+  const [city, setCity] = useState("");
+  const [pricePerHour, setPricePerHour] = useState("");
+  const [imageUrl, setImageUrl] = useState("");
+  
+  // State des slots (initialisé avec un créneau vide)
+  const [slots, setSlots] = useState<SlotInput[]>([{ startTime: "09:00", endTime: "10:00" }]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
+
+  // Ajouter un nouveau champ slot vide
+  const handleAddSlot = () => {
+    setSlots([...slots, { startTime: "18:00", endTime: "19:00" }]);
+  };
+
+  // Supprimer un créneau spécifique
+  const handleRemoveSlot = (index: number) => {
+    const updatedSlots = slots.filter((_, i) => i !== index);
+    setSlots(updatedSlots);
+  };
+
+  // Mettre à jour les heures d'un slot
+  const handleSlotChange = (index: number, field: keyof SlotInput, value: string) => {
+    const updatedSlots = [...slots];
+    updatedSlots[index][field] = value;
+    setSlots(updatedSlots);
+  };
+
+  // Soumission finale vers le Backend (Spring Boot)
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setSuccessMessage("");
+
+    const payload = {
+      name,
+      city,
+      pricePerHour: parseFloat(pricePerHour),
+      imageUrl: imageUrl || "https://images.unsplash.com/photo-1508098682722-e99c43a406b2", // Fallback image
+      slots
+    };
+
+    console.log("Payload envoyé à Spring Boot :", payload);
+
+    // Simulation de l'appel API (Ex: POST /api/terrains)
+    setTimeout(() => {
+      setIsSubmitting(false);
+      setSuccessMessage("🎉 Le terrain et ses créneaux ont été créés avec succès !");
+      // Reset du formulaire
+      setName("");
+      setCity("");
+      setPricePerHour("");
+      setImageUrl("");
+      setSlots([{ startTime: "09:00", endTime: "10:00" }]);
+    }, 1500);
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-6">
+      
+      {/* Alert Success */}
+      {successMessage && (
+        <div className="p-4 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-xl text-sm font-medium shadow-sm animate-fadeIn">
+          {successMessage}
+        </div>
+      )}
+
+      {/* SECTION 1: Infos Générales */}
+      <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm space-y-4">
+        <h3 className="text-base font-bold text-slate-800 border-b border-slate-100 pb-2">💾 Informations Générales</h3>
+        
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="space-y-1">
+            <label className="text-xs font-bold uppercase tracking-wider text-slate-400">Nom du Terrain</label>
+            <input 
+              type="text" 
+              required
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Ex: Terrain Annexe Wembley" 
+              className="w-full px-3 py-2.5 border border-slate-200 bg-white rounded-xl text-sm outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition font-medium" 
+            />
+          </div>
+
+          <div className="space-y-1">
+            <label className="text-xs font-bold uppercase tracking-wider text-slate-400">Ville</label>
+            <input 
+              type="text" 
+              required
+              value={city}
+              onChange={(e) => setCity(e.target.value)}
+              placeholder="Ex: Casablanca" 
+              className="w-full px-3 py-2.5 border border-slate-200 bg-white rounded-xl text-sm outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition font-medium" 
+            />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="space-y-1">
+            <label className="text-xs font-bold uppercase tracking-wider text-slate-400">Prix par Heure (DH)</label>
+            <input 
+              type="number" 
+              required
+              value={pricePerHour}
+              onChange={(e) => setPricePerHour(e.target.value)}
+              placeholder="Ex: 350" 
+              className="w-full px-3 py-2.5 border border-slate-200 bg-white rounded-xl text-sm outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition font-medium" 
+            />
+          </div>
+
+          <div className="space-y-1">
+            <label className="text-xs font-bold uppercase tracking-wider text-slate-400">URL de l'image (Lien internet)</label>
+            <input 
+              type="url" 
+              value={imageUrl}
+              onChange={(e) => setImageUrl(e.target.value)}
+              placeholder="Ex: https://lien-image.com/foot.jpg" 
+              className="w-full px-3 py-2.5 border border-slate-200 bg-white rounded-xl text-sm outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition font-medium" 
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* SECTION 2: Configuration des Slots (Dynamique) */}
+      <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm space-y-4">
+        <div className="flex items-center justify-between border-b border-slate-100 pb-2">
+          <h3 className="text-base font-bold text-slate-800">⏰ Horaires & Créneaux (Slots)</h3>
+          <button
+            type="button"
+            onClick={handleAddSlot}
+            className="text-xs font-bold text-emerald-600 bg-emerald-50 hover:bg-emerald-100 px-3 py-1.5 rounded-lg transition"
+          >
+            + Ajouter un créneau
+          </button>
+        </div>
+
+        {slots.length === 0 ? (
+          <p className="text-sm text-slate-400 text-center py-4">Aucun créneau configuré. Le terrain sera invisible.</p>
+        ) : (
+          <div className="space-y-3">
+            {slots.map((slot, index) => (
+              <div key={index} className="flex items-center gap-4 bg-slate-50 p-3 rounded-xl border border-slate-150 animate-fadeIn">
+                <span className="text-xs font-bold text-slate-400 w-6">#{index + 1}</span>
+                
+                <div className="grid grid-cols-2 gap-2 flex-1">
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-medium text-slate-400">De</span>
+                    <input 
+                      type="time" 
+                      required
+                      value={slot.startTime}
+                      onChange={(e) => handleSlotChange(index, "startTime", e.target.value)}
+                      className="px-2 py-1.5 border border-slate-200 bg-white rounded-lg text-sm outline-none focus:border-emerald-500 font-semibold"
+                    />
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-medium text-slate-400">À</span>
+                    <input 
+                      type="time" 
+                      required
+                      value={slot.endTime}
+                      onChange={(e) => handleSlotChange(index, "endTime", e.target.value)}
+                      className="px-2 py-1.5 border border-slate-200 bg-white rounded-lg text-sm outline-none focus:border-emerald-500 font-semibold"
+                    />
+                  </div>
+                </div>
+
+                {/* Bouton supprimer le créneau */}
+                <button
+                  type="button"
+                  onClick={() => handleRemoveSlot(index)}
+                  className="text-xs font-bold text-red-500 hover:text-red-700 bg-red-50 hover:bg-red-100 px-2.5 py-1.5 rounded-lg transition"
+                  title="Supprimer ce créneau"
+                >
+                  Supprimer
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Validation finale */}
+      <div className="flex items-center justify-end">
+        <button
+          type="submit"
+          disabled={isSubmitting}
+          className={`px-6 py-3 rounded-xl font-bold text-white text-sm transition-all duration-200 shadow-md ${
+            isSubmitting 
+              ? "bg-slate-300 text-slate-500 cursor-not-allowed shadow-none" 
+              : "bg-emerald-600 hover:bg-emerald-700 shadow-emerald-100 hover:shadow-lg"
+          }`}
+        >
+          {isSubmitting ? "Création en cours..." : "🚀 Publier le Terrain"}
+        </button>
+      </div>
+
+    </form>
+  );
+}

@@ -1,65 +1,60 @@
-import Image from "next/image";
+import Link from "next/link";
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+    <main className="flex min-h-screen flex-col items-center justify-center p-6 bg-gradient-to-b from-slate-50 to-slate-100 text-slate-900">
+      <div className="text-center max-w-3xl space-y-8 py-12">
+        
+        {/* Badge Pro */}
+        <span className="inline-flex items-center px-3 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-full shadow-sm">
+          🚀 Solution pour Complexes Sportifs
+        </span>
+        
+        {/* Titre Principal */}
+        <h1 className="text-4xl sm:text-6xl font-black text-slate-900 tracking-tight leading-none">
+          Gérez vos terrains de sport <br />
+          <span className="bg-gradient-to-r from-green-600 to-emerald-500 bg-clip-text text-transparent">
+            en pilote automatique
+          </span>
+        </h1>
+        
+        {/* Description */}
+        <p className="text-lg sm:text-xl text-slate-600 max-w-2xl mx-auto font-normal">
+          La plateforme professionnelle de réservation et de gestion pour vos terrains de foot, padel, tennis et bien plus. Optimisez votre taux d'occupation dès aujourd'hui.
+        </p>
+
+        {/* Boutons d'Action (CTA) */}
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
+          <Link 
+            href="/terrains" 
+            className="w-full sm:w-auto inline-flex items-center justify-center px-8 py-4 text-base font-semibold text-white bg-emerald-600 hover:bg-emerald-700 rounded-xl shadow-md shadow-emerald-200 transition-all duration-200 transform hover:-translate-y-0.5"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+            Voir les Terrains Disponibles
+          </Link>
+          <Link 
+            href="/dashboard" 
+            className="w-full sm:w-auto inline-flex items-center justify-center px-8 py-4 text-base font-semibold text-slate-700 bg-white border border-slate-200 hover:bg-slate-50 rounded-xl shadow-sm transition-all duration-200"
           >
-            Documentation
-          </a>
+            Espace Gestionnaire
+          </Link>
         </div>
-      </main>
-    </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 pt-12 border-t border-slate-200/60 max-w-2xl mx-auto text-left">
+          <div className="space-y-1">
+            <h3 className="font-bold text-slate-800">⚡ Réservation Flash</h3>
+            <p className="text-sm text-slate-500">Vos clients réservent et paient en ligne en moins de 30 secondes.</p>
+          </div>
+          <div className="space-y-1">
+            <h3 className="font-bold text-slate-800">📊 Planning Dynamique</h3>
+            <p className="text-sm text-slate-500">Évitez les doublons grâce à une synchronisation en temps réel.</p>
+          </div>
+          <div className="space-y-1">
+            <h3 className="font-bold text-slate-800">📈 Statistiques</h3>
+            <p className="text-sm text-slate-500">Suivez vos revenus et les heures creuses pour maximiser vos gains.</p>
+          </div>
+        </div>
+
+      </div>
+    </main>
   );
 }
