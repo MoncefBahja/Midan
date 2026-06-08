@@ -20,43 +20,70 @@ function CheckoutContent() {
   const [terrain, setTerrain] = useState<Terrain | null>(null);
   const [selectedSlot, setSelectedSlot] = useState<Slot | null>(null);
   
-  const [loading, setLoading] = useState(() => {
-    return !!(terrainId && slotId);
-  });
+ const [loading, setLoading] = useState(true);
   
   const [paymentMethod, setPaymentMethod] = useState<"CASH" | "ONLINE">("CASH");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  console.log("🔍 DETECTIVE LOG :", {
+    urlTerrainId: terrainId,
+    urlSlotId: slotId,
+    stateTerrain: terrain,
+    stateSlot: selectedSlot,
+    estEnTrainDeCharger: loading
+  });
 
   useEffect(() => {
-    if (!terrainId || !slotId) return;
+  if (!terrainId || !slotId) return;
 
-    async function loadData() {
-      try {
-        const terrainIdNumber = parseInt(terrainId!, 10);
-        const data = await getTerrainById(terrainIdNumber);
-        if (data) {
-          setTerrain(data);
-          const slot = data.slots?.find((s) => s.id === parseInt(slotId!, 10));
-          if (slot) setSelectedSlot(slot);
+  async function loadData() {
+    try {
+      const terrainIdNumber = parseInt(terrainId!, 10);
+      const data = await getTerrainById(terrainIdNumber);
+      
+      if (data) {
+        setTerrain(data);
+        
+        // 🔥 Hna khdemna b String() bach n-fouto l-mochkil d type string/number
+        const slot = data.slots?.find((s) => String(s.id) === String(slotId));
+        if (slot) {
+          setSelectedSlot(slot);
+        } else {
+          console.warn("⚠️ Terrain t-lqa, walakin l-créneau (slot) makaynmch f la liste:", data.slots);
         }
-      } catch (error) {
-        console.error("Erreur de chargement des données", error);
-      } finally {
-        setLoading(false);
+      } else {
+        console.warn("⚠️ Makaynch chi terrain b had l-ID:", terrainIdNumber);
       }
+    } catch (error) {
+      console.error("❌ Erreur de chargement des données", error);
+    } finally {
+      setLoading(false);
     }
+  }
+  
+  loadData();
+}, [terrainId, slotId]);
+const handleConfirmBooking = async () => {
+  setIsSubmitting(true);
+  
+  // Simulation d'API ou traitement
+  setTimeout(() => {
+    setIsSubmitting(false);
     
-    loadData();
-  }, [terrainId, slotId]);
+    // Génération d'un ID unique de réservation
+    const mockUuid = "BK-" + Math.random().toString(36).substr(2, 9).toUpperCase();
+    
+    // Construction des paramètres de redirection
+    const params = new URLSearchParams({
+      uuid: mockUuid,
+      terrain: terrain?.name || "",
+      date: date,
+      slot: `${selectedSlot?.startTime} - ${selectedSlot?.endTime}`,
+      method: paymentMethod
+    });
 
-  const handleConfirmBooking = async () => {
-    setIsSubmitting(true);
-    setTimeout(() => {
-      setIsSubmitting(false);
-      const mockUuid = "BK-" + Math.random().toString(36).substr(2, 9).toUpperCase();
-      router.push(`/checkout/success?uuid=${mockUuid}&terrain=${encodeURIComponent(terrain?.name || "")}`);
-    }, 1500);
-  };
+    router.push(`/checkout/success?${params.toString()}`);
+  }, 1500);
+};
 
   if (loading) {
     return (
@@ -188,3 +215,6 @@ export default function CheckoutPage() {
     </Suspense>
   );
 }
+
+
+
