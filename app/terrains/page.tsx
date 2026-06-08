@@ -76,9 +76,6 @@ export default function TerrainsPage() {
           <h1 className="text-2xl sm:text-4xl font-black tracking-tight text-slate-950">
             Trouver un Terrain
           </h1>
-          <p className="text-xs sm:text-base text-slate-500 font-medium">
-            Réservez instantanément votre prochain match en quelques clics.
-          </p>
         </div>
 
         {/* Section Filtrage */}
@@ -180,9 +177,9 @@ export default function TerrainsPage() {
                       <div className="absolute top-3 left-3 bg-slate-950/70 backdrop-blur-md text-white text-[11px] font-bold px-2.5 py-1 rounded-lg shadow-sm tracking-wide">
                         📍 {terrain.city}
                       </div>
-                      <div className="absolute bottom-3 right-3 bg-emerald-600 text-white text-[11px] font-bold px-2.5 py-1 rounded-md shadow-sm">
+                      {/* <div className="absolute bottom-3 right-3 bg-emerald-600 text-white text-[11px] font-bold px-2.5 py-1 rounded-md shadow-sm">
                         Disponible
-                      </div>
+                      </div> */}
                     </div>
 
                     {/* Contenu textuel */}
@@ -190,11 +187,11 @@ export default function TerrainsPage() {
                       <h2 className="text-lg sm:text-xl font-extrabold text-slate-900 tracking-tight leading-tight group-hover:text-emerald-700 transition-colors">
                         {terrain.name}
                       </h2>
-                      <div className="flex items-center gap-1 text-xs text-slate-400 font-semibold uppercase tracking-wider">
+                      {/* <div className="flex items-center gap-1 text-xs text-slate-400 font-semibold uppercase tracking-wider">
                         <span>⚽ Football</span>
                         <span>•</span>
                         <span>1 Heure Minimum</span>
-                      </div>
+                      </div> */}
                     </div>
                   </div>
 
